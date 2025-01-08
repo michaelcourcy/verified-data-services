@@ -21,9 +21,9 @@ With the operator pattern provided by kubernetes it is now possible to deploy Hi
 
 Nearly all major databases vendor or database specialists provide an operator that capture their expertise.
 
-We recommand our customer to use operators for their data services so that they benefit high availability and high security. 
-
-Also using a vendor operator give you the possibility to ask for support, even if in the first place you use the community or developper edition.
+We recommand using operators for your data services: 
+- You'll benefit high availability and high security very easily. 
+- You can upgrade to a vendor supported version even if in the first place you use the community or developper edition.
 
 ## Supported operators 
 
