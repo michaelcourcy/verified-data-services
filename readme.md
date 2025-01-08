@@ -48,7 +48,7 @@ In each architecture reference we cover those aspects :
 We define how the operator should be deployed in order to work with Kasten by Veeam. We specify the version of the operator and the version of the database.
 
 ### Operator validation 
-Depending of the collaboration we developped with the operator we may ask the vendor to validate our architecture. 
+Depending of the collaboration we developped with the vendore we may ask hime to validate the architecture reference document. 
 
 ### High Availability 
 We always deploy the data service in High Availability mode and made sure that Kasten works well in this conditions. We Provide scenario to test failover.
