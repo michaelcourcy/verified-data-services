@@ -48,10 +48,10 @@ In each architecture reference we cover those aspects :
 We define how the operator should be deployed in order to work with Kasten by Veeam. We specify the version of the operator and the version of the database.
 
 ### Operator validation 
-Depending of the collaboration we developped with the vendore we may ask hime to validate the architecture reference document. 
+Depending of the collaboration we developped with the vendor we may ask him to validate the architecture reference document. 
 
 ### High Availability 
-We always deploy the data service in High Availability mode and made sure that Kasten works well in this conditions. We Provide scenario to test failover.
+We always deploy the data service in High Availability mode and made sure that Kasten works well in this condition. We Provide scenario to test failover.
 
 ### Unsafe backup & restore
 
@@ -60,7 +60,9 @@ from Kasten (freeze/flush or logical dump) by just backing up and restoring usin
 
 **With unsafe backup and restore your workload may restart but silent data loss can occur with no error message to let you know.**
 
-But it's better than nothing and a sign of robustness. Kasten can do database vendor recommanded backup with [Blueprint](https://docs.kanister.io/architecture.html#architecture).
+But it's better than nothing and is a sign of robustness. 
+
+Kasten can do database vendor recommanded backup with [Blueprint](https://docs.kanister.io/architecture.html#architecture).
 
 ### Blueprint example 
 
@@ -88,13 +90,13 @@ However the verified data service repository leverage Kanister but mainly levera
 - Autodiscovery and Capture of the metadata 
 - Autodiscovery and Capture of the data with the Kasten data mover
 - Migration 
-- Automatic Blueprint Binding 
+- Polyglot backup with Blueprint Binding
 - Disaster recovery 
 - Immutability 
 - Fast restore from snapshots 
 - GUI with authentication and authorization
 
-And many others but that's the most important. 
+And many others.
 
 
 
