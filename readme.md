@@ -2,7 +2,7 @@
 
 ## Goal 
 
-Verified data services is a repository of architecture reference for having data-service and Kasten By Veeam work together to backup or leverage the backup features of the data-service operator.
+Verified data services is a repository of architecture reference for having Kasten By Veeam and the main data services operator work together.
 
 ## Motivation 
 
