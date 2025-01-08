@@ -315,11 +315,13 @@ exit
 
 # Create an alias to connect to the listener through the client 
 
-For simplicity let's create an alias that will connect to the listner through the first pod.
+For simplicity let's create an alias that will connect to the listener through the first pod.
 
 ```
 alias dx="kubectl exec dxesqlag-0 -c mssql-tools -it -- /opt/mssql-tools/bin/sqlcmd -S dxemssql-cluster-lb,14033 -U sa -P 'MyP@SSw0rd1\!'"
 ```
+
+Notice the Host : `-S dxemssql-cluster-lb,14033`
 
 The only thing you have to do now is to simply type `dx`
 ```
@@ -662,14 +664,3 @@ use AdventureWorks2022;
 select * from Sales.MyTable;
 ```
 And make sure they are consistent with your `STOPAT ` value.
-
-
-
-
-
-Msg 3059, Level 16, State 2, Server dxesqlag-0, Line 1
-This BACKUP or RESTORE command is not supported on a database mirror or secondary replica.
-Msg 3013, Level 16, State 1, Server dxesqlag-0, Line 1
-RESTORE DATABASE is terminating abnormally.
-
-
