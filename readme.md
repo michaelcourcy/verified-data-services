@@ -56,23 +56,15 @@ We always deploy the data service in High Availability mode and made sure that K
 ### Unsafe backup & restore
 
 An Unsafe backup and restore consist of capturing the namespace that contains the database without any extended behaviour 
-from Kasten (freeze/flush or logical dump) by just backing up using the standard Kasten workflow. Then restore it to see if database : 
-1. Restarts and can accept new read/write connections 
-2. Is in a state consistent with the state of the database at the backup but this is very difficult to check 
-
-Database are designed to restart after a power cut or a machine failure. Kasten take crash consistent backup hence when you 
-restore your workload with Kasten most of the time they restarts. But database vendor recommand doing post an pre operation before taking a
-backup for flushing the buffer on the disk and sometimes transaction are spanning on multiple machines and only vendor backup can capture 
-a consistent state of the database. 
+from Kasten (freeze/flush or logical dump) by just backing up and restoring using the standard Kasten workflow. 
 
 **With unsafe backup and restore your workload may restart but silent data loss can occur with no error message to let you know.**
 
-If you don't have the time to implement a blueprint for your database, unsafe backup and restore is always better than nothing ... 
-Actually it's far better than nothing. But this is not ideal and Kasten can solve this problem with Blueprint. 
+But it's better than nothing and a sign of robustness. Kasten can do database vendor recommanded backup with [Blueprint](https://docs.kanister.io/architecture.html#architecture).
 
 ### Blueprint example 
 
-In order to do safe backup and restore of your database Kasten allow you to extends the backup/restore workflow with Blueprint. 
+In order to do safe backup and restore of your database Kasten allow you to extends the backup/restore workflow with [Blueprint](https://docs.kanister.io/architecture.html#architecture). 
 
 Blueprint capture data-service expertise in a sequence of function that you'll reapply to all your data-service in your cluster with blueprint binding.
 
