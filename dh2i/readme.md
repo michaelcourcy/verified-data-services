@@ -63,8 +63,8 @@ Overcoming all this limitations is always possible. This is the duty of the cust
                                         +---------------------+                                   |
                                                   |                                               |
                                                   |                                               |
-     +---------------------------+                v                                               | Backup databases  
-     |    All PVCs in namespace  |      +---------------------+                                   | on replica:/backup/
+     +---------------------------+                v                            Backup databases   |  
+     |    All PVCs in namespace  |      +---------------------+              on replica:/backup/  | 
      |                           |      |  Load Balancer      |                                   | 
      |  mssql-dxesqlag-0/1/2 pvc |      |  Listener 14033     |                                   |
      | dxe-dxesqlag-0/1/2 pvc    |      +---------------------+                                   |
