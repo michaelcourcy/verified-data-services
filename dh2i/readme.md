@@ -313,15 +313,27 @@ Now you can exit by simply typing exit
 exit
 ```
 
+# Create an alias to connect to the listener through the client 
+
+For simplicity let's create an alias that will connect to the listner through the first pod.
+
+```
+alias dx="kubectl exec dxesqlag-0 -c mssql-tools -it -- /opt/mssql-tools/bin/sqlcmd -S dxemssql-cluster-lb,14033 -U sa -P 'MyP@SSw0rd1\!'"
+```
+
+The only thing you have to do now is to simply type `dx`
+```
+dx
+1>
+```
 
 # Let's install the AdventureWorks2022 database in the availability group
 
 first find who's the primary, because adding a database to the availability group require to be on the primary.
 ```
-kubectl exec dxesqlag-0 -- mkdir /backup/script
-kubectl cp find-primary.sql dxesqlag-0:/backup/script/find-primary.sql
-kubectl exec dxesqlag-0 -c mssql-tools -it -- /opt/mssql-tools/bin/sqlcmd -S dxemssql-cluster-lb,14033 -U sa -P 'MyP@SSw0rd1!' -i /backup/script/find-primary.sql
+select @@servername
 ```
+The listener always connect to the primary, hence `@@servername` will give you the primary.
 
 Suppose you find DXESQLAG-0, then the rest of the operations should be done on the corresponding pod dxesqlag-0 
 
@@ -330,11 +342,7 @@ Let's install the AdventureWorks2022 database by entering the mssql tool
 kubectl exec -it dxesqlag-0 -c mssql-tools -- /bin/bash
 ```
 
-> **Another way to find the primary**: You can also execute `select @@servername` because the listener always redirect you to the primary
-
-
-We have created the /backup volumeMount on each mssql and mssql-tool container. This is important for handling the backup process because 
-whatever will be the primary it will always be able to read/write in /backup.
+Let's download the backup on the shared backup pvc : 
 ```
 curl -L -o /backup/AdventureWorks2022.bak https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2022.bak
 sqlcmd -S localhost -U sa -P 'MyP@SSw0rd1!'
@@ -461,20 +469,6 @@ kubectl exec dxesqlag-0 -c mssql-tools -it -- /opt/mssql-tools/bin/sqlcmd -S dxe
 
 You can read that DXESQLAG-1 is now the primary instead of DXESQLAG-0.
 
-# Create an alias to connect to the listener through the client 
-
-For simplicity let's create an alias that will connect to the listner through the client pod.
-
-```
-alias dx="kubectl exec client -it -- /opt/mssql-tools/bin/sqlcmd -S dxemssql-cluster-lb,14033 -U sa -P 'MyP@SSw0rd1\!'"
-```
-
-The only thing you have to do now is to simply type `dx`
-```
-dx
-1>
-```
-
 # Unsafe backup and restore
 
 An Unsafe backup and restore consist of capturing the namespace that contains the database without any extended behaviour 
@@ -545,22 +539,22 @@ When you'll need to restore you will restore as in the basic backup then you can
 point in time. 
 
 For instance let's imagine you have a 2 hours frequency backup we create this succeeding backups 
+```
 - 08:00 
-  - /backup/current/AdventureWorks2022.bak  (1)
+  - /backup/current/AdventureWorks2022.bak  (08:00)
 - 10:00
-  - /backup/current/AdventureWorks2022.trn  (2)
-  - /backup/previous/AdventureWorks2022.bak (1)
-  - /backup/current/AdventureWorks2022.bak  (3)
+  - /backup/current/AdventureWorks2022.trn  (10:00)
+  - /backup/previous/AdventureWorks2022.bak (08:00)
+  - /backup/current/AdventureWorks2022.bak  (10:00)
 - 12:00
-  - /backup/current/AdventureWorks2022.trn  (4)
-  - /backup/previous/AdventureWorks2022.bak (3)
-  - /backup/current/AdventureWorks2022.bak  (5)
+  - /backup/current/AdventureWorks2022.trn  (12:00)
+  - /backup/previous/AdventureWorks2022.bak (10:00)
+  - /backup/current/AdventureWorks2022.bak  (12:00)
 - 14:00 
-  - /backup/current/AdventureWorks2022.trn  (6)
-  - /backup/previous/AdventureWorks2022.bak (5)
-  - /backup/current/AdventureWorks2022.bak  (7)
-
-the (x) numeric is for following the order of creation. Each time the whole backup pvc is captured.
+  - /backup/current/AdventureWorks2022.trn  (14:00)
+  - /backup/previous/AdventureWorks2022.bak (12:00)
+  - /backup/current/AdventureWorks2022.bak  (14:00)
+```
 
 For restoring the database at 12:00 you restore the 12:00 kasten `restorepoint` 
 ```
